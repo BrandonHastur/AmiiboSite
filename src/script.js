@@ -1,5 +1,5 @@
 //^ Extracción de datos de la API Amiibo
-async function fetchAmiiboData(url = 'https://www.amiiboapi.com/api/amiibo/') {
+async function fetchAmiiboData(url) {
   try {
     const response = await fetch(url);
     const data = await response.json();
@@ -13,6 +13,8 @@ async function fetchAmiiboData(url = 'https://www.amiiboapi.com/api/amiibo/') {
 const search = document.querySelector('.search');
 const searchInput = document.querySelector('.search-input');
 const searchButton = document.querySelector('.btn');
+
+const cards = document.querySelectorAll('card');
 
 //@ Funcionamiento visual de la barra de búsqueda
 searchButton.addEventListener('click', e => {
@@ -29,16 +31,9 @@ function releaseDate(release){
   }
 }
 
-//% Variable del contenedor principal
-const mainContainer = document.querySelector('.main-container');
-
-//^ LLamada para usar la información de la API
-fetchAmiiboData().then(amiiboData => {
-  // mainContainer.innerHTML = ''; //=limpia el contenedor de las tarjetas
-
+//^ LLamada para usar la información de la API y caragar el contenido al abrir la pagina
+fetchAmiiboData('https://www.amiiboapi.com/api/amiibo/').then(amiiboData => {
   objectAmiibos(amiiboData.amiibo); //= funcion a ejecutar con la data
-  
-  
 });
 
 //% Variable de los botones de paginas
@@ -47,8 +42,8 @@ const buttonsPagsContainer = document.querySelector('.buttons-pags');
 //% Variable contenedor de las tarjetas 
 const container = document.getElementById('container');
 
-
 function objectAmiibos(amiibos){ //= amiibos es el array entero
+  container.innerHTML = ''; //=limpia el contenedor de las tarjetas
   let amiibosTotal = Object.keys(amiibos).length;
   let pageResults = 50;
   let pags = amiibosTotal / pageResults;
@@ -56,8 +51,8 @@ function objectAmiibos(amiibos){ //= amiibos es el array entero
   //@ Cartas por cada Pagina
   for (let i = 0; i <= amiibosTotal; i += pageResults) { //= Por cada pagina haz lo siguiente...
 
-    const chunkKeys = Object.keys(amiibos).slice(i, i + pageResults); // Extrae 50 claves por ciclo
-    const chunk = chunkKeys.map(key => amiibos[key]); // Mapea las claves a sus valores en el objeto
+    const chunkKeys = Object.keys(amiibos).slice(i, i + pageResults); //= Extrae 50 claves por ciclo
+    const chunk = chunkKeys.map(key => amiibos[key]); //= Mapea las claves a sus valores en el objeto
 
     //@ Creación de pagina
     const pag = document.createElement('div');
@@ -65,7 +60,7 @@ function objectAmiibos(amiibos){ //= amiibos es el array entero
     if(i != 0){
       pag.classList.add('inactive');
     }
-    console.log('pagina agregada'); //debug
+    console.log('Paginas encontradas'); //debug
     container.appendChild(pag);  
 
     //@ Creación de cartas por pagina
@@ -170,6 +165,7 @@ function objectAmiibos(amiibos){ //= amiibos es el array entero
 
   const blocks = document.querySelectorAll('.main-container');
 
+  buttonsPagsContainer.innerHTML = '';
   for(let counter = 0; counter <= pags; counter++){ //= Por cada pagina haz lo siguiente...
     //@ botones por cada pagina
     const button = document.createElement('button');
@@ -186,6 +182,25 @@ function objectAmiibos(amiibos){ //= amiibos es el array entero
   }
 }
 
+//^ Funcionamiento de Búsqueda de la barra principal
+searchInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") { //= Detectar si la tecla presionada es Enter
+    event.preventDefault();   //= Evitar el comportamiento por defecto si lo hubiera
+    const query = capitalizeWords(searchInput.value);
+
+    fetchAmiiboData('https://www.amiiboapi.com/api/amiibo/').then(amiiboData => {
+      const searchFilter = amiiboData.amiibo.filter(amiibo => amiibo.amiiboSeries.includes(query) || amiibo.character.includes(query) || amiibo.gameSeries.includes(query) || amiibo.name.includes(query));
+      
+      if(searchFilter.length == 0){
+        notFound(query)
+      }else{
+        objectAmiibos(searchFilter); //= funcion a ejecutar con la data
+      }
+    });
+  }
+});
+
+//@ Función visual de los Botones de cada pagina
 function activeButton(button){
   const pagsButtons = buttonsPagsContainer.querySelectorAll('button');
   pagsButtons.forEach(button => {
@@ -194,31 +209,97 @@ function activeButton(button){
   button.classList.add('button-active');
 }
 
-function releaseDate(release){
-  if(release == null){
-    return 'Never Released';
-  }else{
-    return release;
+//^ Funcionalidad de botones de búsqueda
+
+//% Variables de cada contenedor de Botones e Input de búsqueda
+const containerName = document.getElementById('cname');
+const containerVideogame = document.getElementById('cvideogame');
+const containerAmiiboSeries = document.getElementById('camiiboseries');
+const containerTypes = document.getElementById('ctypes');
+
+//% Variable de Botones de Busqueda
+const searchDivs = document.querySelectorAll('.search-container')
+
+//^ Funcionalidad de botones de busqueda y busqueda personalizada
+searchDivs.forEach(searchDiv => {
+
+  //^ Busqueda
+  try{
+    const input = searchDiv.querySelector('input');
+    input.addEventListener("keydown", event => {
+      if (event.key === "Enter") { //= Detectar si la tecla presionada es Enter
+          event.preventDefault();   
+          const query = input.value.replaceAll(" ", "&");
+          
+          const id = searchDiv.getAttribute('id');
+          // console.log(id);
+          const url = searchCases(id);
+
+          fetchAmiiboData(url + query).then(amiiboData => {
+            if(amiiboData.amiibo && amiiboData.amiibo.length === 0){
+              notFound(query.replaceAll("&", " "));
+            }else{
+              objectAmiibos(amiiboData.amiibo); //= funcion a ejecutar con la data
+            }
+          });
+      }
+    });
+
+  }catch(error){} //* Types no tiene opción de búsqueda unicamente botones.
+
+  //^ Botones
+  const buttonsDiv = searchDiv.querySelectorAll('button');
+  buttonsDiv.forEach(button => {
+    const id = searchDiv.getAttribute('id');
+    // console.log(id);
+    const url = searchCases(id);
+    const buttonInputSearch = button.textContent.replaceAll(" ", "&");
+    // console.log(buttonInputSearch);
+    button.addEventListener('click', () => {
+        fetchAmiiboData(url + buttonInputSearch).then(amiiboData => {
+          objectAmiibos(amiiboData.amiibo); //= funcion a ejecutar con la data
+        });
+      }
+    );
+  });
+});
+
+//^ Función de tipo de búsqueda a realizar
+function searchCases(id){
+  switch (id){
+    case 'cname':
+      return 'https://www.amiiboapi.com/api/amiibo/?character=';
+    case 'cvideogame':
+      return 'https://www.amiiboapi.com/api/amiibo/?gameseries=';
+    case 'camiiboseries':
+      return 'https://www.amiiboapi.com/api/amiibo/?amiiboSeries=';
+    case 'ctypes':
+      return 'https://www.amiiboapi.com/api/amiibo/?type=';
+    default:
+      return 'https://www.amiiboapi.com/api/amiibo';
   }
 }
 
-// Funcionalidad de botones para game-series y tipos
+//^ Función para algo no encontrado o error
+function notFound(query){
+  container.innerHTML = '';
+  const notFoundContent = document.createElement('div');
+  const notFoundImg = document.createElement('img');
+  notFoundImg.setAttribute('src' , 'imgs/mario.png');
+  notFoundContent.classList.add('not-found');
+  notFoundContent.innerText = `No se encontraron resultados para: "${query}" 🙁.`;
+  container.appendChild(notFoundContent);
+  notFoundContent.appendChild(notFoundImg);
+  console.log(query);
+  
+}
 
-
-//^ Funcionamiento de Búsqueda de la barra principal
-searchInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") { //= Detectar si la tecla presionada es Enter
-      event.preventDefault();   //= Evitar el comportamiento por defecto si lo hubiera
-
-      const query = searchInput.value.trim();
-
-      if (query) {
-          console.log("Búsqueda realizada:", query);
-
-
-      } else {
-          console.log("Por favor, ingresa algo para buscar.");
-
-      }
-  }
-});
+//^ Función para capitalizar palabras u oraciones
+function capitalizeWords(texto) {
+  return texto
+      .split(" ")                  // Dividimos la cadena en palabras
+      .map(palabra => 
+          palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase()
+      )                             // Convertimos la primera letra de cada palabra a mayúscula
+      .join(" ");                   // Unimos las palabras nuevamente en una cadena
+}

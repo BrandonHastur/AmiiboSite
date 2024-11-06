@@ -682,6 +682,10 @@ input {
   }
 }
 
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
 .block {
   display: block;
 }
@@ -693,6 +697,14 @@ input {
 .h-fit {
   height: -moz-fit-content;
   height: fit-content;
+}
+
+.w-\[350px\] {
+  width: 350px;
+}
+
+.max-w-\[350px\] {
+  max-width: 350px;
 }
 
 .transform {
@@ -714,8 +726,32 @@ input {
   padding-bottom: 0.75rem;
 }
 
+.pt-10 {
+  padding-top: 2.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.font-merriweather {
+  font-family: Merriweather Sans;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
 .outline {
   outline-style: solid;
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.font-italic {
+  font-style: italic;
 }
 
 .main-container {
@@ -730,6 +766,12 @@ input {
 
 .main-container > * {
   max-width: 24rem;
+}
+
+@media not all and (min-width: 640px) {
+  .main-container {
+    width: auto;
+  }
 }
 
 @media (min-width: 768px) {
@@ -926,7 +968,9 @@ input {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
-/*@ PRESENTATION */
+/*@ Footer Navbar */
+
+/*@ PRESENTACIÓN */
 
 .presentation {
   margin-left: auto;
@@ -940,7 +984,7 @@ input {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.85;
   padding: 0.75rem;
-  padding-top: 2vh;
+  padding-top: 3vh;
   text-align: center;
 }
 
@@ -1022,4 +1066,26 @@ input {
   background-color: rgb(241 247 237 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(159 18 57 / var(--tw-text-opacity));
+}
+
+/*@ ELEMENTO NO ENCONTRADO */
+
+.not-found {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 0.75rem;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.5;
+  padding: 1.75rem;
+  text-align: center;
+  font-family: Merriweather Sans;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(19 17 26 / var(--tw-text-opacity));
 }

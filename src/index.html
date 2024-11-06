@@ -63,13 +63,13 @@
       <div class="search-options-container"> <!--% SEARCH OPTIONS -->
         <h2>Search By:</h2>
 
-        <div class="search-container" id="name"> <!--^ NAME -->
+        <div class="search-container" id="cname"> <!--^ NAME -->
           <div>
             <span>Name: </span>
             <input type="text" placeholder="Mario Cereal...">
           </div>
           <!--* BUTTONS -->
-          <div>
+          <div id="bname">
             <button>Sonic</button>
             <button>Mario</button>
             <button>Falco</button>
@@ -77,13 +77,13 @@
           </div>
         </div>
 
-        <div class="search-container" id="videogame"> <!--^ VIDEOGAME -->
+        <div class="search-container" id="cvideogame"> <!--^ VIDEOGAME -->
           <div>
             <span>Video Game: </span>
             <input type="text" placeholder="Sonic...">  
           </div>
           <!--* BUTTONS -->
-          <div>
+          <div id="bvideogame">
             <button>Animal Crossing</button>
             <button>The Legend of Zelda</button>
             <button>Super Mario</button>
@@ -91,13 +91,13 @@
           </div>
         </div>
 
-        <div class="search-container" id="amiiboseries"> <!--^ AMIIBO SERIES -->
+        <div class="search-container" id="camiiboseries"> <!--^ AMIIBO SERIES -->
           <div>
             <span>Amiibo Series: </span>
             <input type="text" placeholder="Super Smash Bros...">            
           </div>
           <!--* BUTTONS -->
-          <div>
+          <div id="bamiiboseries">
             <button>Super Nintendo World</button>
             <button>8-bit Mario</button>
             <button>Power Pros</button>
@@ -105,10 +105,10 @@
           </div>
         </div>
 
-        <div class="search-container" id="types"> <!--^ TYPES -->
+        <div class="search-container" id="ctypes"> <!--^ TYPES -->
           <span>Type: </span>
           <!--* BUTTONS -->
-          <div>
+          <div id="btypes">
             <button>Card</button>
             <button>Figure</button>
             <button>Band</button>
@@ -119,24 +119,49 @@
       </div>
     
       <div class="buttons-pags"> <!--% PAGINAS DISPONIBLES -->
-      <!-- Paginas dinámicas -->
+      <!--= Aquí se muestran las paginas dinámicas -->
       </div>
     </section>
 
     <!--@ AMIIBOS DISPLAY CONTAINER -->
 
-      <div id="container">
-
+    <div id="container">
+      <!--=  Main Cards Container -->
+      <div id="main-container">
+        <!--= Cards Container (block) -->
       </div>
-
-    <!--@ PAGINAS DISPONIBLES -->
-    <section>
-
-    </section>
+      <div class="not-found">
+        <img src="imgs/loading.gif" alt="cargando..">
+        <p>Cargando...</p>
+        <!--= Show in case of nothing found or error -->
+      </div>
+    </div>
 
   </main>
 
-  <footer class="">
+  <footer class="pt-10">
+    <section class="bg-vulcan h-fit py-3 px-4 mt-10">
+
+      <nav class="navbar">
+        <!--@ LOGO -->
+        <a href="https://brandonhastur.com" class="logo font-effect-outline"> 
+          BrandonHastur.com
+        </a>
+
+        <p class="max-w-[350px] font-merriweather font-light">Proyecto desarrollado para explorar y mostrar las posibilidades de la AmiiboAPI, 
+          forma parte de mi portafolio de desarrollo web y respeta las condiciones de uso de la
+          <a href="https://www.amiiboapi.com/" target="_blank">AmiiboAPI</a>.</p>
+
+        <div class="max-w-[350px] text-center">
+          <p>Mas sobre este proyecto:</p>
+          <a class="link-navbar" href="https://github.com/BrandonHastur" target="_blank">GitHub</a>
+          <a class="link-navbar" href="https://www.linkedin.com/in/luis-brandon-ramos/" target="_blank">LinkedIn</a>
+        </div>
+
+        <a href="https://brandonhastur.com/#proyectos" class="link-navbar">Otros Proyectos</a>
+      </nav>
+
+    </section>
   </footer>
 </body>
 <script src="script.js"></script>
